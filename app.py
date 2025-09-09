@@ -61,5 +61,23 @@ def create_bebida():
     # Si es GET
     return render_template('create_bebida.html') 
 
+# Actualizar bebida 
+@app.route('/bebidas/update/<int:ID>', methods=['GET', 'POST'])
+def update_bebida(ID):
+    bebida = Bebida.query.get(ID)
+    
+    if request.method == 'POST':
+        bebida.ID = request.form['ID']
+        bebida.nombre = request.form['nombre']
+        bebida.descripcion = request.form['descripcion']
+        bebida.precio = float(request.form['precio'])
+        bebida.unidades = int(request.form['unidades'])
+        
+        db.session.commit()
+        return redirect(url_for('home'))
+    
+    return render_template('update_bebida.html', bebida=bebida)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
