@@ -33,10 +33,14 @@ with app.app_context():
     db.create_all()
 
 # Ruta principal
-@app.route("/")
+@app.route("/", methods=['GET'])
 def home():
-    bebidas = Bebida.query.all()
-    return render_template("index.html", bebidas=bebidas)
+    q = request.args.get('q')
+    if q:
+        bebidas = Bebida.query.filter(Bebida.nombre.ilike(f'%{q}%')).all()
+    else:
+        bebidas = Bebida.query.all()
+    return render_template("read_bebida.html", bebidas=bebidas)  # <- aquí
 
 # Crear nueva bebida
 @app.route('/bebidas/new', methods=['GET', 'POST'])

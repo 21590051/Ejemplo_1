@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %} Lista de Bebidas {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Buscador + Agregar bebida -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-12 col-md-6 text-md-end">
+            <a href="{{ url_for('create_bebida') }}" 
+               class="btn btn-success btn-lg shadow-sm">
+                + Agregar Nueva Bebida
+            </a>
+        </div>
+        <br>
+        <div class="col-12 col-md-6 mb-2 mb-md-0">
+            <form method="GET" action="{{ url_for('home') }}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2 shadow-sm" 
+                       placeholder="🔍 Buscar bebida por nombre.." value="{{ request.args.get('q', '') }}">
+                <button type="submit" class="btn btn-primary shadow-sm">
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de bebidas -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-center py-3 text-muted fw-semibold">ID</th>
+                                <th class="py-3 text-muted fw-semibold">Nombre</th>
+                                <th class="py-3 text-muted fw-semibold">Descripción</th>
+                                <th class="text-center py-3 text-muted fw-semibold">Precio</th>
+                                <th class="text-center py-3 text-muted fw-semibold">Stock</th>
+                                <th class="text-center py-3 text-muted fw-semibold">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bebida in bebidas %}
+                            <tr class="border-bottom">
+                                <td class="text-center py-4 text-muted">{{ bebida.ID }}</td>
+                                <td class="py-3">
+                                    <span class="fw-medium text-dark">{{ bebida.nombre }}</span>
+                                </td>
+                                <td class="py-3 text-muted">{{ bebida.descripcion }}</td>
+                                <td class="text-center py-4">
+                                    <span class="fw-semibold text-success">${{ bebida.precio }}</span>
+                                </td>
+                                <td class="text-center py-4">
+                                    <span class="badge rounded-pill px-3 py-2
+                                        {% if bebida.unidades > 10 %}bg-success bg-opacity-10 text-success
+                                        {% elif bebida.unidades > 5 %}bg-warning bg-opacity-10 text-warning
+                                        {% else %}bg-danger bg-opacity-10 text-danger{% endif %}">
+                                        {{ bebida.unidades }} unidades
+                                    </span>
+                                </td>
+                                <td class="text-center py-3">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('update_bebida', ID=bebida.ID) }}" 
+                                           class="btn btn-sm btn-outline-primary rounded-start">
+                                            Editar
+                                        </a>
+                                        <a href="{{ url_for('delete_bebida', ID=bebida.ID) }}" 
+                                           class="btn btn-sm btn-outline-danger rounded-end"
+                                           onclick="return confirm('¿Seguro que deseas eliminar esta bebida?');">
+                                           Eliminar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+input[name="q"] {
+    border-radius: 50px;
+    padding: 10px 20px;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+}
+input[name="q"]:focus {
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    border-color: #0d6efd;
+}
+button[type="submit"] {
+    border-radius: 50px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
+{% endblock %}
