@@ -78,6 +78,14 @@ def update_bebida(ID):
     
     return render_template('update_bebida.html', bebida=bebida)
 
+    #Eliminar bebida
+@app.route('/bebidas/delete/<string:ID>')
+def delete_bebida(ID):
+    bebida = Bebida.query.get(ID)
+    if bebida:
+        db.session.delete(bebida)
+        db.session.commit()
+        return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(debug=True)
